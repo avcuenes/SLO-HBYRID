@@ -157,8 +157,6 @@ def build_port(selected: List[str]):
         elif u=="CMAES":                port.append(("CMAES",run_cmaes))
         elif u in ("SCIPYDE","DE"):     port.append(("SciPyDE",run_scipy_de))
         elif u=="LBFGSB":               port.append(("LBFGSB",run_lbfgsb))
-        elif u=="JSO":                  port.append(("JSO",run_pyade_jso))
-        elif u=="LSHADE":               port.append(("LSHADE",run_pyade_lshade))
         elif u=="GWO"   and HAVE_MEALPY:port.append(("GWO", lambda*fargs,**k: run_mealpy(GWO.OriginalGWO,*fargs,**k)))
         elif u=="PSO"   and HAVE_MEALPY:port.append(("PSO", lambda*fargs,**k: run_mealpy(PSO.OriginalPSO,*fargs,**k)))
         elif u=="WOA"   and HAVE_MEALPY:port.append(("WOA", lambda*fargs,**k: run_mealpy(WOA.OriginalWOA,*fargs,**k)))
@@ -174,10 +172,13 @@ def build_port(selected: List[str]):
 def run_suite(alg_name, runner, dims, fids, insts, outdir, budget_mult, seed, quiet):
     req_folder = os.path.join(outdir, alg_name)
     obs = cocoex.Observer("bbob", f"result_folder: {req_folder} algorithm_name: {alg_name}")
-    suite = cocoex.Suite("bbob","year:2009",
-         f"dimensions:{','.join(map(str,dims))} "
-         f"function_indices:{','.join(map(str,fids))} "
-         f"instance_indices:{','.join(map(str,insts))}")
+    # suite = cocoex.Suite("bbob","year:2009",
+    #      f"dimensions:{','.join(map(str,dims))} "
+    #      f"function_indices:{','.join(map(str,fids))} "
+    #      f"instance_indices:{','.join(map(str,insts))}")
+    suite = cocoex.Suite("bbob", "instances: 1-15",
+        f"dimensions:{','.join(map(str,dims))} "
+        f"function_indices:{','.join(map(str,fids))}")
 
     csv_path=os.path.join(obs.result_folder,"results_bbob_summary.csv")
     with open(csv_path,"w",newline="") as fh:
