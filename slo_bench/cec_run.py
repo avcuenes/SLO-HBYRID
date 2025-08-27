@@ -12,16 +12,24 @@ Example
 -------
 python3 -m slo_bench.cec_run \
   --suite cec2022 --dims 10 20 --fids 1-12 --runs 30 \
-  --algs SLO_HBYRID CMAES SciPyDE jSO L_SHADE LBFGSB \
+  --algs SLO_HBYRID CMAES SciPyDE jSO L_SHADE LBFGSB GWO  \
   --budget-mult 20000 --target-tol 1e-8 \
   --seed0 0 --outdir results_cec
 """
 from __future__ import annotations
-import argparse, csv, os, sys, time, importlib
+import argparse, csv, os, sys, time, importlib, inspect, random
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Tuple, Optional
+from typing import Callable, Dict, List, Tuple
 
 import numpy as np
+
+# --- NumPy compatibility shim for older libs (PyADE, etc.) ------------
+if not hasattr(np, "float"):   np.float   = float    # noqa
+if not hasattr(np, "int"):     np.int     = int      # noqa
+if not hasattr(np, "bool"):    np.bool    = np.bool_ # noqa
+if not hasattr(np, "object"):  np.object  = object   # noqa
+if not hasattr(np, "complex"): np.complex = complex  # noqa
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # ---------------------------------------------------------------------
@@ -30,14 +38,19 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from spiral_lshade import SpiralLSHADEParams, _slo_lshade_core
 
 # ---------------------------------------------------------------------
-#  Optional third-party libraries
+#  Optional third-party libraries (imported safely)
 # ---------------------------------------------------------------------
-try:    import cma;                                               HAVE_CMA    = True
-except Exception:                                                 HAVE_CMA    = False
+try:
+    import cma
+    HAVE_CMA = True
+except Exception:
+    HAVE_CMA = False
 
 try:
-    from scipy.optimize import differential_evolution, minimize;  HAVE_SCIPY  = True
-except Exception:                                                 HAVE_SCIPY  = False
+    from scipy.optimize import differential_evolution, minimize
+    HAVE_SCIPY = True
+except Exception:
+    HAVE_SCIPY = False
 
 try:
     import pyade.jso   as pyade_jso
@@ -47,16 +60,26 @@ except Exception:
     HAVE_PYADE = False
 
 # OPFUNU – CEC suites
-try:    from opfunu.cec_based import cec2014 as ofu2014;           HAVE_2014   = True
-except Exception:                                                 HAVE_2014   = False
-try:    from opfunu.cec_based import cec2022 as ofu2022;           HAVE_2022   = True
-except Exception:                                                 HAVE_2022   = False
+try:
+    from opfunu.cec_based import cec2014 as ofu2014
+    HAVE_2014 = True
+except Exception:
+    HAVE_2014 = False
+try:
+    from opfunu.cec_based import cec2022 as ofu2022
+    HAVE_2022 = True
+except Exception:
+    HAVE_2022 = False
+
+# We will import Mealpy lazily in main() only if requested by the user.
+MEALPY_NAMES = {"PSO", "GWO", "DE", "GA", "SHADE", "SSA"}
 
 # =====================================================================
 #  Helpers
 # =====================================================================
 def set_seed(seed: int):
     np.random.seed(int(seed))
+    random.seed(int(seed))
 
 def project_box_open(x, lb, ub):
     x  = np.asarray(x,  dtype=np.float64)
@@ -105,8 +128,7 @@ def build_problem(suite: str, fid: int, dim: int) -> Problem:
     fobj = None
     for k in ("ndim", "dimension", "problem_size", "n_dimensions", "dim"):
         try:
-            fobj = fcls(**{k: dim})
-            break
+            fobj = fcls(**{k: dim}); break
         except TypeError:
             continue
     if fobj is None:
@@ -170,8 +192,6 @@ def run_slo_hbyrid(prob: Problem, budget: int, seed: int) -> Tuple[float, int]:
                                            budget, seed, kw={})
     return float(f_best), int(nfe)
 
-
-
 # --- CMA-ES -----------------------------------------------------------
 def run_cmaes(prob: Problem, budget: int, seed: int):
     if not HAVE_CMA: raise RuntimeError("cma not installed")
@@ -188,8 +208,7 @@ def run_cmaes(prob: Problem, budget: int, seed: int):
 
 # --- SciPy Differential Evolution ------------------------------------
 def run_scipy_de(prob: Problem, budget: int, seed: int):
-    if not HAVE_SCIPY:
-        raise RuntimeError("scipy not installed")
+    if not HAVE_SCIPY: raise RuntimeError("scipy not installed")
     evalf = EvalCounter(lambda z: prob.f(project_box_open(z, prob.lower, prob.upper)),
                         prob.fopt, 1e-8)
     dim, pop = prob.dim, 15
@@ -203,8 +222,7 @@ def run_scipy_de(prob: Problem, budget: int, seed: int):
 
 # --- SciPy L-BFGS-B ---------------------------------------------------
 def run_lbfgsb(prob: Problem, budget: int, seed: int):
-    if not HAVE_SCIPY:
-        raise RuntimeError("scipy not installed")
+    if not HAVE_SCIPY: raise RuntimeError("scipy not installed")
     evalf = EvalCounter(lambda z: prob.f(project_box_open(z, prob.lower, prob.upper)),
                         prob.fopt, 1e-8)
     x0 = prob.lower + np.random.default_rng(seed).random(prob.dim) * (prob.upper - prob.lower)
@@ -213,33 +231,254 @@ def run_lbfgsb(prob: Problem, budget: int, seed: int):
              options=dict(maxfun=int(budget), disp=False))
     return float(evalf.best), int(evalf.nfe)
 
-# --- PyADE jSO / L-SHADE ---------------------------------------------
+# -------------------- PyADE helpers & runner --------------------------
+def _pyade_find_apply_fn(algo_module):
+    """Find a usable entrypoint in a PyADE module."""
+    for name in ("apply", "app", "run", "fit", "evolve", "optimize"):
+        fn = getattr(algo_module, name, None)
+        if callable(fn):
+            return fn
+    # callable objects named Apply/App
+    for name in dir(algo_module):
+        obj = getattr(algo_module, name)
+        if callable(obj) and getattr(obj, "__name__", "").lower() in ("apply", "app"):
+            return obj
+    raise AttributeError(f"No usable entrypoint in {algo_module.__name__}")
+
+def _pyade_obj_func(evalf, prob):
+    """Objective accepting extra args (older PyADE may call func(x, i, ...))."""
+    def f(x, *args, **kwargs):
+        return float(evalf(project_box_open(np.asarray(x, float), prob.lower, prob.upper)))
+    return f
+
+# --- PyADE jSO / L-SHADE (version-tolerant) ---------------------------
 def run_pyade(prob: Problem, budget: int, seed: int, which: str):
     if not HAVE_PYADE:
         raise RuntimeError("pyade not installed or import failed")
-    evalf = EvalCounter(lambda z: prob.f(project_box_open(z, prob.lower, prob.upper)),
-                        prob.fopt, 1e-8)
-    bounds = np.stack([prob.lower, prob.upper], axis=1)
-    algo   = pyade_jso if which.lower() == "jso" else pyade_lshade
-    params = algo.get_default_params(dim=prob.dim)
-    params.update(bounds=bounds,
-                  func=lambda x: evalf(np.asarray(x, float)),
-                  max_evals=int(budget), max_fes=int(budget), seed=int(seed))
-    pop = params.get("NP", max(20, 5 * prob.dim))
-    params["iters"] = params.get("iters", max(1, budget // pop))
-    sol, fit = algo.apply(**params)
+
+    algo_module = pyade_jso if which.lower() == "jso" else pyade_lshade
+    apply_fn = _pyade_find_apply_fn(algo_module)
+
+    evalf = EvalCounter(
+        lambda z: prob.f(project_box_open(np.asarray(z, float), prob.lower, prob.upper)),
+        prob.fopt, 1e-8
+    )
+    f_handle   = _pyade_obj_func(evalf, prob)
+    bounds_mat = np.stack([prob.lower, prob.upper], axis=1).astype(float)
+
+    # defaults if available
+    try:
+        defaults = dict(algo_module.get_default_params(dim=prob.dim))
+    except Exception:
+        defaults = {}
+    NP    = int(max(defaults.get("NP", 0), 5 * prob.dim, 20))
+    iters = max(1, int(budget) // max(NP, 1))
+
+    # try kwargs path
+    sig = inspect.signature(apply_fn)
+    accepted = set(sig.parameters.keys())
+    kw = {}
+    for n in ("func", "fobj", "function"):
+        if n in accepted: kw[n] = f_handle; break
+    if "bounds" in accepted:
+        kw["bounds"] = bounds_mat
+    else:
+        if "lower" in accepted: kw["lower"] = prob.lower.astype(float)
+        if "upper" in accepted: kw["upper"] = prob.upper.astype(float)
+    for n in ("max_evals", "maxEvaluations", "max_evaluation", "maxFEs", "budget"):
+        if n in accepted: kw[n] = int(budget); break
+    if "seed" in accepted: kw["seed"] = int(seed)
+    for n in ("iters", "n_iters", "max_iters"):
+        if n in accepted: kw[n] = int(iters); break
+    for n in ("NP", "pop_size", "population_size"):
+        if n in accepted: kw[n] = int(NP); break
+
+    try:
+        sol, fit = apply_fn(**kw)
+        if evalf.nfe == 0: _ = f_handle(prob.lower)
+        return float(fit), int(evalf.nfe)
+    except TypeError:
+        pass  # fall through to positional legacy path
+
+    # positional path for legacy signatures
+    params = [p for p in sig.parameters.values()
+              if p.kind in (inspect.Parameter.POSITIONAL_ONLY,
+                            inspect.Parameter.POSITIONAL_OR_KEYWORD)]
+    opts = defaults.copy(); opts.setdefault("NP", NP)
+    mem_size = int(defaults.get("H", defaults.get("memory_size", 10)))
+    def _cb(*_a, **_k): return None
+
+    val = {
+        "func": f_handle, "fobj": f_handle, "function": f_handle,
+        "bounds": bounds_mat, "lower": prob.lower.astype(float), "upper": prob.upper.astype(float),
+        "max_evals": int(budget), "maxEvaluations": int(budget),
+        "max_evaluation": int(budget), "maxFEs": int(budget), "budget": int(budget),
+        "seed": int(seed),
+        "iters": int(iters), "n_iters": int(iters), "max_iters": int(iters),
+        "NP": int(NP), "pop_size": int(NP), "population_size": int(NP),
+        "individual_size": int(prob.dim),
+        "opts": opts, "options": opts,
+        "memory_size": mem_size,
+        "callback": _cb,
+    }
+
+    pos_args = []
+    for p in params:
+        name = p.name
+        if name in val:
+            pos_args.append(val[name])
+        elif p.default is not inspect._empty:
+            continue
+        else:
+            lname = name.lower()
+            if lname.startswith("func"):   pos_args.append(f_handle); continue
+            if lname.startswith("bound"):  pos_args.append(bounds_mat); continue
+            if "eval" in lname or "fe" in lname: pos_args.append(int(budget)); continue
+            if name == "seed":             pos_args.append(int(seed)); continue
+            raise TypeError(f"PyADE apply(...) requires unknown positional arg '{name}'")
+
+    sol, fit = apply_fn(*pos_args)
+    if evalf.nfe == 0: _ = f_handle(prob.lower)
     return float(fit), int(evalf.nfe)
 
-# Mapping of CLI names to runner functions
-ALG_MAP = {
-    "SLO_HBYRID": run_slo_hbyrid,
-    "CMAES":      run_cmaes,
-    "SciPyDE":    run_scipy_de,
-    "LBFGSB":     run_lbfgsb,
-    "jSO":        lambda p,b,s: run_pyade(p, b, s, "jso"),
-    "L_SHADE":    lambda p,b,s: run_pyade(p, b, s, "lshade"),
-    "L-SHADE":    lambda p,b,s: run_pyade(p, b, s, "lshade"),
+# --------------------- Mealpy generic runner --------------------------
+MEALPY_IMPORTS = {
+    "pso":   ("mealpy.swarm_based.PSO",  ["OriginalPSO", "ImprovedPSO", "BasePSO"]),
+    "gwo":   ("mealpy.swarm_based.GWO",  ["OriginalGWO", "BaseGWO"]),
+    "de":    ("mealpy.evolutionary_based.DE",    ["OriginalDE", "BaseDE"]),
+    "ga":    ("mealpy.evolutionary_based.GA",    ["OriginalGA", "BaseGA"]),
+    "shade": ("mealpy.evolutionary_based.SHADE", ["OriginalSHADE", "BaseSHADE"]),
+    "woa":   ("mealpy.swarm_based.WOA",  ["OriginalWOA", "BaseWOA"]),
+    "ssa":   ("mealpy.swarm_based.SSA",  ["OriginalSSA", "BaseSSA"]),
 }
+
+def _get_mealpy_cls(which: str):
+    which = which.lower()
+    if which not in MEALPY_IMPORTS:
+        raise ValueError(f"Unknown Mealpy algorithm '{which}'")
+    mod_path, class_names = MEALPY_IMPORTS[which]
+    mod = importlib.import_module(mod_path)
+    for cname in class_names:
+        if hasattr(mod, cname):
+            return getattr(mod, cname)
+    raise ImportError(f"No suitable class found in {mod_path} among {class_names}")
+
+def run_mealpy(prob: Problem, budget: int, seed: int, which: str, **kw):
+    # This is only called if we successfully lazy-import Mealpy.
+    set_seed(seed)
+    evalf = EvalCounter(
+        lambda z: prob.f(project_box_open(np.asarray(z, float), prob.lower, prob.upper)),
+        prob.fopt, 1e-8
+    )
+    pop   = int(kw.pop("pop_size", max(20, 5 * int(prob.dim))))
+    epoch = max(1, int(budget) // max(pop, 1))
+
+    algo_cls = _get_mealpy_cls(which)
+    ctor_params = inspect.signature(algo_cls.__init__).parameters
+    ctor_kw = dict(epoch=epoch)
+    if "pop_size" in ctor_params:          ctor_kw["pop_size"] = pop
+    elif "population_size" in ctor_params: ctor_kw["population_size"] = pop
+    ctor_kw.update(kw)
+    try:
+        algo = algo_cls(**ctor_kw)
+    except TypeError:
+        algo = algo_cls(epoch=epoch)  # last resort
+
+    # Try new Problem API; else fallback to dict interface
+    best_f = float("inf")
+    try:
+        from mealpy import Problem as MP, FloatVar as FV
+        class _MP(MP):
+            def __init__(self):
+                super().__init__(bounds=FV(prob.lower, prob.upper), minmax="min")
+            def obj_func(self, sol):
+                return float(evalf(np.asarray(sol, float)))
+        problem_obj = _MP()
+        try:
+            ret = algo.solve(problem_obj, seed=int(seed))
+        except TypeError:
+            ret = algo.solve(problem_obj)
+        if isinstance(ret, tuple) and len(ret) >= 2: best_f = float(ret[1])
+        elif hasattr(ret, "loss_best"):              best_f = float(ret.loss_best)
+        elif hasattr(ret, "best"):                   best_f = float(ret.best)
+    except Exception:
+        # legacy dict interface
+        prob_dict = {
+            "obj_func": lambda x: float(evalf(np.asarray(x, float))),
+            "bounds": (prob.lower.tolist(), prob.upper.tolist()),
+            "minmax": "min",
+            "name": f"F{prob.fid:02d}",
+        }
+        try:
+            ret = algo.solve(prob_dict)
+            if isinstance(ret, tuple) and len(ret) >= 2: best_f = float(ret[1])
+            elif hasattr(ret, "loss_best"):              best_f = float(ret.loss_best)
+            elif hasattr(ret, "best"):                   best_f = float(ret.best)
+        except Exception:
+            pass
+
+    if evalf.nfe == 0:
+        x0 = prob.lower + np.random.default_rng(seed).random(prob.dim) * (prob.upper - prob.lower)
+        _ = evalf(x0)
+    if not np.isfinite(best_f):
+        best_f = evalf.best
+    return float(best_f), int(evalf.nfe)
+
+# ---------------- jSO / L-SHADE via Minion (preferred), fallback PyADE
+def _vectorized_func_from_evalf(evalf, prob):
+    def fvec(X):
+        X = np.asarray(X, dtype=float)
+        if X.ndim == 1:
+            X = X[None, :]
+        out = []
+        for x in X:
+            x = project_box_open(x, prob.lower, prob.upper)
+            out.append(float(evalf(x)))
+        return out
+    return fvec
+
+def _bounds_list(prob):
+    return list(zip(prob.lower.tolist(), prob.upper.tolist()))
+
+def run_minion(prob: Problem, budget: int, seed: int, algo_name: str):
+    try:
+        import minionpy as mpy
+    except Exception as e:
+        raise RuntimeError("minionpy not installed") from e
+
+    evalf = EvalCounter(lambda z: prob.f(project_box_open(np.asarray(z, float), prob.lower, prob.upper)),
+                        prob.fopt, 1e-8)
+    fvec = _vectorized_func_from_evalf(evalf, prob)
+    opt = mpy.Minimizer(
+        func=fvec,
+        x0=None,
+        bounds=_bounds_list(prob),
+        algo=algo_name,            # "jSO" or "LSHADE"
+        relTol=0.0,
+        maxevals=int(budget),
+        seed=int(seed),
+        options=None
+    )
+    res = opt.optimize()
+    return float(res.fun), int(evalf.nfe)
+
+def run_minion_jso(prob: Problem, budget: int, seed: int):
+    return run_minion(prob, budget, seed, "jSO")
+
+def run_minion_lshade(prob: Problem, budget: int, seed: int):
+    return run_minion(prob, budget, seed, "LSHADE")
+
+def run_jso_external(prob: Problem, budget: int, seed: int):
+    try:
+        return run_minion_jso(prob, budget, seed)
+    except Exception:
+        return run_pyade(prob, budget, seed, "jso")
+
+def run_lshade_external(prob: Problem, budget: int, seed: int):
+    try:
+        return run_minion_lshade(prob, budget, seed)
+    except Exception:
+        return run_pyade(prob, budget, seed, "lshade")
 
 # =====================================================================
 #  ERT summary helpers
@@ -274,8 +513,7 @@ def parse_ids(spec: str) -> List[int]:
     res=[]
     for part in str(spec).split(","):
         s = part.strip()
-        if not s:
-            continue
+        if not s: continue
         if "-" in s:
             a, b = map(int, s.split("-"))
             lo, hi = (a, b) if a <= b else (b, a)
@@ -307,6 +545,36 @@ def main():
     with open(results_csv, "w", newline="") as fh:
         csv.writer(fh).writerow(
             ["alg","suite","fid","dim","run","fbest","err","nfe","hit","time_sec"])
+
+    # Build algorithm map (add Mealpy lazily if requested)
+    ALG_MAP: Dict[str, Callable[[Problem,int,int], Tuple[float,int]]] = {
+        "SLO_HBYRID": run_slo_hbyrid,
+        "CMAES":      run_cmaes,
+        "SciPyDE":    run_scipy_de,
+        "LBFGSB":     run_lbfgsb,
+        "jSO":        run_jso_external,
+        "L_SHADE":    run_lshade_external,
+        "L-SHADE":    run_lshade_external,
+    }
+
+    # Only try to import Mealpy if user requested any Mealpy algorithms
+    mealpy_available = False
+    if any(a in MEALPY_NAMES for a in args.algs):
+        try:
+            import importlib as _ilm
+            _ilm.import_module("mealpy.optimizer")  # triggers package load
+            mealpy_available = True
+        except Exception as e:
+            print(f"[WARN] Mealpy unavailable ({e}); skipping Mealpy algorithms.", file=sys.stderr)
+
+    if mealpy_available:
+        ALG_MAP.update({
+            "PSO":   lambda p,b,s: run_mealpy(p,b,s,"pso"),
+            "GWO":   lambda p,b,s: run_mealpy(p,b,s,"gwo"),
+            "DE":    lambda p,b,s: run_mealpy(p,b,s,"de"),
+            "GA":    lambda p,b,s: run_mealpy(p,b,s,"ga"),
+            "SSA":   lambda p,b,s: run_mealpy(p,b,s,"ssa"),
+        })
 
     all_rows: List[RunResult] = []
     for dim in args.dims:

@@ -41,6 +41,128 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from dataclasses import fields
+# minionpy (preferred external differential evolution family)
+try:
+    import minionpy as mpy
+    HAVE_MINION = True
+except Exception:
+    HAVE_MINION = False
+
+
+def _bounds_list(lb, ub):
+    return list(zip(lb.tolist(), ub.tolist()))
+
+def _vectorized_counter_func(f):
+    """Return (fvec, counter_dict) so we can report n_evals accurately."""
+    calls = {"n": 0}
+    def fvec(X):
+        X = np.asarray(X, float)
+        if X.ndim == 1:
+            X = X[None, :]
+        out = []
+        for x in X:
+            calls["n"] += 1
+            out.append(float(f(x)))
+        return out
+    return fvec, calls
+
+def run_minion_algo(algo_name: str):
+    """Factory: returns a runner(f, lb, ub, budget, seed, kw) using minionpy."""
+    if not HAVE_MINION:
+        raise RuntimeError("minionpy not installed")
+    def _runner(f, lb, ub, budget, seed, kw):
+        fvec, calls = _vectorized_counter_func(f)
+        opt = mpy.Minimizer(
+            func=fvec,
+            x0=None,
+            bounds=_bounds_list(lb, ub),
+            algo=algo_name,                 # 'jSO', 'LSHADE', 'JADE', 'NLSHADE_RSP'
+            relTol=0.0,
+            maxevals=int(budget),
+            seed=int(seed),
+            options=None
+        )
+        res = opt.optimize()
+        return float(res.fun), int(calls["n"])
+    return _runner
+
+def build_port(selected: List[str]):
+    port = []
+    for n in selected:
+        u = n.upper()
+
+        # --- Your hybrid & classical baselines ---
+        if u in ("SLO_HBYRID", "SLO_HYBRID"):
+            port.append(("SLO_HBYRID", run_spiral_lshade_hybrid))
+        elif u == "CMAES":
+            port.append(("CMAES", run_cmaes))
+        elif u in ("SCIPYDE", "DE"):
+            port.append(("SciPyDE", run_scipy_de))
+        elif u == "LBFGSB":
+            port.append(("LBFGSB", run_lbfgsb))
+
+        # --- Minion family (preferred) + graceful fallbacks ---
+        elif u in ("JSO",):
+            if HAVE_MINION:
+                port.append(("jSO", run_minion_algo("jSO")))
+            elif HAVE_MEALPY:
+                # approximate fallback with SHADE
+                from mealpy.evolutionary_based import SHADE
+                port.append(("jSO", lambda *a, **k: run_mealpy(SHADE.OriginalSHADE, *a, **k)))
+            else:
+                print(f"[SKIP] {n} unavailable (need minionpy or mealpy)", file=sys.stderr)
+
+        elif u in ("LSHADE", "L_SHADE", "L-SHADE"):
+            if HAVE_MINION:
+                port.append(("LSHADE", run_minion_algo("LSHADE")))
+            elif HAVE_MEALPY:
+                from mealpy.evolutionary_based import SHADE
+                port.append(("LSHADE", lambda *a, **k: run_mealpy(SHADE.OriginalSHADE, *a, **k)))
+            else:
+                print(f"[SKIP] {n} unavailable (need minionpy or mealpy)", file=sys.stderr)
+
+        elif u in ("NLSHADE-RSP", "NLSHADE_RSP", "NL_SHADE_RSP"):
+            if HAVE_MINION:
+                port.append(("NLSHADE_RSP", run_minion_algo("NLSHADE_RSP")))
+            elif HAVE_MEALPY:
+                # use SHADE as closest available fallback
+                from mealpy.evolutionary_based import SHADE
+                port.append(("NLSHADE_RSP", lambda *a, **k: run_mealpy(SHADE.OriginalSHADE, *a, **k)))
+            else:
+                print(f"[SKIP] {n} unavailable (need minionpy or mealpy)", file=sys.stderr)
+
+        elif u == "JADE":
+            if HAVE_MINION:
+                port.append(("JADE", run_minion_algo("JADE")))
+            elif HAVE_MEALPY:
+                # fall back to DE (not JADE, but similar family)
+                from mealpy.evolutionary_based import DE
+                port.append(("JADE", lambda *a, **k: run_mealpy(DE.OriginalDE, *a, **k)))
+            else:
+                print(f"[SKIP] {n} unavailable (need minionpy or mealpy)", file=sys.stderr)
+
+        # --- Mealpy swarm/evo (when available) ---
+        elif u == "GWO" and HAVE_MEALPY:
+            from mealpy.swarm_based import GWO
+            port.append(("GWO", lambda *fargs, **k: run_mealpy(GWO.OriginalGWO, *fargs, **k)))
+        elif u == "PSO" and HAVE_MEALPY:
+            from mealpy.swarm_based import PSO
+            port.append(("PSO", lambda *fargs, **k: run_mealpy(PSO.OriginalPSO, *fargs, **k)))
+        elif u in ("GA", "MEALPYGA") and HAVE_MEALPY:
+            from mealpy.evolutionary_based import GA
+            # GA in mealpy often exposes BaseGA; use it if OriginalGA doesn't exist
+            try:
+                port.append(("MealpyGA", lambda *fargs, **k: run_mealpy(GA.OriginalGA, *fargs, **k)))
+            except AttributeError:
+                port.append(("MealpyGA", lambda *fargs, **k: run_mealpy(GA.BaseGA, *fargs, **k)))
+        elif u == "SSA" and HAVE_MEALPY:
+            from mealpy.swarm_based import SSA
+            port.append(("SSA", lambda *fargs, **k: run_mealpy(SSA.OriginalSSA, *fargs, **k)))
+
+        else:
+            print(f"[SKIP] {n} unavailable", file=sys.stderr)
+
+    return port
 
 # -----------------------------------------------------------------------------
 #  helpers
@@ -134,37 +256,57 @@ def run_lbfgsb(f, lb, ub, budget, seed, kw):
     return float(res.fun), int(getattr(res,'nfev',0))
 
 def run_mealpy(mealpy_cls, f, lb, ub, budget, seed, kw):
-    if not HAVE_MEALPY: raise RuntimeError("mealpy not installed")
-    pop = int(kw.get("pop_size",50))
-    epoch = max(1, budget//pop)
+    if not HAVE_MEALPY:
+        raise RuntimeError("mealpy not installed")
+    pop = int(kw.get("pop_size", 50))
+    epoch = max(1, budget // pop)
+
     class P(MealpyProblem):  # wrap
-        def __init__(self): super().__init__(bounds=FloatVar(lb,ub), minmax="min")
-        def obj_func(self,sol): return float(f(sol))
-    algo = mealpy_cls(epoch=epoch,pop_size=pop,
-                      **{k:v for k,v in kw.items() if k not in ('pop_size',)})
-    _, fit = algo.solve(P())
-    return float(fit), int(epoch*pop)
+        def __init__(self):
+            super().__init__(bounds=FloatVar(lb, ub), minmax="min")
+        def obj_func(self, sol): 
+            return float(f(np.asarray(sol, float)))
+
+    ctor_kwargs = {k: v for k, v in kw.items() if k not in ('pop_size',)}
+    try:
+        algo = mealpy_cls(epoch=epoch, pop_size=pop, verbose=False, **ctor_kwargs)
+    except TypeError:
+        # some versions don't accept verbose
+        algo = mealpy_cls(epoch=epoch, pop_size=pop, **ctor_kwargs)
+
+    # some versions return (pos, fit), others an object; extract a float
+    ret = algo.solve(P())
+    if isinstance(ret, tuple) and len(ret) >= 2:
+        best_fit = float(ret[1])
+    elif hasattr(ret, "loss_best"):
+        best_fit = float(ret.loss_best)
+    elif hasattr(ret, "best"):
+        best_fit = float(ret.best)
+    else:
+        best_fit = float(ret)
+
+    return float(best_fit), int(epoch * pop)
 
 
 
 
 
-def build_port(selected: List[str]):
-    port=[]
-    for n in selected:
-        u=n.upper()
-        if u in ("SLO_HBYRID","SLO_HBYRID"): port.append(("SLO_HBYRID",run_spiral_lshade_hybrid))
-        elif u=="CMAES":                port.append(("CMAES",run_cmaes))
-        elif u in ("SCIPYDE","DE"):     port.append(("SciPyDE",run_scipy_de))
-        elif u=="LBFGSB":               port.append(("LBFGSB",run_lbfgsb))
-        elif u=="GWO"   and HAVE_MEALPY:port.append(("GWO", lambda*fargs,**k: run_mealpy(GWO.OriginalGWO,*fargs,**k)))
-        elif u=="PSO"   and HAVE_MEALPY:port.append(("PSO", lambda*fargs,**k: run_mealpy(PSO.OriginalPSO,*fargs,**k)))
-        elif u=="WOA"   and HAVE_MEALPY:port.append(("WOA", lambda*fargs,**k: run_mealpy(WOA.OriginalWOA,*fargs,**k)))
-        elif u=="SSA"   and HAVE_MEALPY:port.append(("SSA", lambda*fargs,**k: run_mealpy(SSA.OriginalSSA,*fargs,**k)))
-        elif u=="SHADE" and HAVE_MEALPY:port.append(("SHADE",lambda*fargs,**k: run_mealpy(SHADE.OriginalSHADE,*fargs,**k)))
-        elif u=="GA"    and HAVE_MEALPY:port.append(("GA",   lambda*fargs,**k: run_mealpy(GA.BaseGA,*fargs,**k)))
-        else: print(f"[SKIP] {n} unavailable", file=sys.stderr)
-    return port
+# def build_port(selected: List[str]):
+#     port=[]
+#     for n in selected:
+#         u=n.upper()
+#         if u in ("SLO_HBYRID","SLO_HBYRID"): port.append(("SLO_HBYRID",run_spiral_lshade_hybrid))
+#         elif u=="CMAES":                port.append(("CMAES",run_cmaes))
+#         elif u in ("SCIPYDE","DE"):     port.append(("SciPyDE",run_scipy_de))
+#         elif u=="LBFGSB":               port.append(("LBFGSB",run_lbfgsb))
+#         elif u=="GWO"   and HAVE_MEALPY:port.append(("GWO", lambda*fargs,**k: run_mealpy(GWO.OriginalGWO,*fargs,**k)))
+#         elif u=="PSO"   and HAVE_MEALPY:port.append(("PSO", lambda*fargs,**k: run_mealpy(PSO.OriginalPSO,*fargs,**k)))
+#         elif u=="WOA"   and HAVE_MEALPY:port.append(("WOA", lambda*fargs,**k: run_mealpy(WOA.OriginalWOA,*fargs,**k)))
+#         elif u=="SSA"   and HAVE_MEALPY:port.append(("SSA", lambda*fargs,**k: run_mealpy(SSA.OriginalSSA,*fargs,**k)))
+#         elif u=="SHADE" and HAVE_MEALPY:port.append(("SHADE",lambda*fargs,**k: run_mealpy(SHADE.OriginalSHADE,*fargs,**k)))
+#         elif u=="GA"    and HAVE_MEALPY:port.append(("GA",   lambda*fargs,**k: run_mealpy(GA.BaseGA,*fargs,**k)))
+#         else: print(f"[SKIP] {n} unavailable", file=sys.stderr)
+#     return port
 
 # -----------------------------------------------------------------------------
 #  Suite runner
