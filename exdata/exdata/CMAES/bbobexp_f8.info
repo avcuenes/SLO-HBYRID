@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 8, DIM = 2, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM2.dat, 1:547|0.0e+00, 2:553|0.0e+00, 3:475|0.0e+00, 4:487|0.0e+00, 5:883|0.0e+00, 1:547|0.0e+00, 2:553|0.0e+00, 3:475|0.0e+00, 4:487|0.0e+00, 5:883|0.0e+00, 1:547|0.0e+00, 2:553|0.0e+00, 3:475|0.0e+00, 4:487|0.0e+00, 5:883|0.0e+00
+suite = 'bbob', funcId = 8, DIM = 3, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM3.dat, 1:1093|0.0e+00, 2:1667|0.0e+00, 3:1387|0.0e+00, 4:1002|0.0e+00, 5:1233|0.0e+00, 1:1093|0.0e+00, 2:1667|0.0e+00, 3:1387|0.0e+00, 4:1002|0.0e+00, 5:1233|0.0e+00, 1:1093|0.0e+00, 2:1667|0.0e+00, 3:1387|0.0e+00, 4:1002|0.0e+00, 5:1233|0.0e+00
+suite = 'bbob', funcId = 8, DIM = 5, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM5.dat, 1:1825|0.0e+00, 2:2473|0.0e+00, 3:2137|0.0e+00, 4:2113|0.0e+00, 5:2401|7.1e-15, 1:1825|0.0e+00, 2:2473|0.0e+00, 3:2137|0.0e+00, 4:2113|0.0e+00, 5:2401|7.1e-15, 1:1825|0.0e+00, 2:2473|0.0e+00, 3:2137|0.0e+00, 4:2113|0.0e+00, 5:2401|7.1e-15
+suite = 'bbob', funcId = 8, DIM = 10, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM10.dat, 1:7181|0.0e+00, 2:5711|0.0e+00, 3:6511|2.8e-14, 4:6201|2.8e-14, 5:6491|7.1e-15, 1:7181|0.0e+00, 2:5711|0.0e+00, 3:6511|2.8e-14, 4:6201|2.8e-14, 5:6491|7.1e-15, 1:7181|0.0e+00, 2:5711|0.0e+00, 3:6511|2.8e-14, 4:6201|2.8e-14, 5:6491|7.1e-15
+suite = 'bbob', funcId = 8, DIM = 20, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM20.dat, 1:19921|2.8e-14, 2:17881|1.1e-13, 3:20725|1.4e-14, 4:19273|5.0e-14, 5:18037|2.8e-14, 1:19921|2.8e-14, 2:17881|1.1e-13, 3:20725|1.4e-14, 4:19273|5.0e-14, 5:18037|2.8e-14, 1:19921|2.8e-14, 2:17881|1.1e-13, 3:20725|1.4e-14, 4:19273|5.0e-14, 5:18037|2.8e-14

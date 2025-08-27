@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 4, DIM = 2, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f4/bbobexp_f4_DIM2.dat, 1:595|2.2e+00, 2:631|9.9e-01, 3:601|5.0e+00, 4:571|3.9e+00, 5:553|2.0e+00, 1:595|2.2e+00, 2:631|9.9e-01, 3:601|5.0e+00, 4:571|3.9e+00, 5:553|2.0e+00, 1:595|2.2e+00, 2:631|9.9e-01, 3:601|5.0e+00, 4:571|3.9e+00, 5:553|2.0e+00
+suite = 'bbob', funcId = 4, DIM = 3, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f4/bbobexp_f4_DIM3.dat, 1:890|9.0e+00, 2:1079|8.8e+00, 3:883|8.0e+00, 4:834|1.1e+01, 5:967|1.4e+01, 1:890|9.0e+00, 2:1079|8.8e+00, 3:883|8.0e+00, 4:834|1.1e+01, 5:967|1.4e+01, 1:890|9.0e+00, 2:1079|8.8e+00, 3:883|8.0e+00, 4:834|1.1e+01, 5:967|1.4e+01
+suite = 'bbob', funcId = 4, DIM = 5, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f4/bbobexp_f4_DIM5.dat, 1:1689|7.0e+00, 2:1817|1.1e+01, 3:1617|7.0e+00, 4:1913|6.0e+00, 5:1825|1.1e+01, 1:1689|7.0e+00, 2:1817|1.1e+01, 3:1617|7.0e+00, 4:1913|6.0e+00, 5:1825|1.1e+01, 1:1689|7.0e+00, 2:1817|1.1e+01, 3:1617|7.0e+00, 4:1913|6.0e+00, 5:1825|1.1e+01
+suite = 'bbob', funcId = 4, DIM = 10, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f4/bbobexp_f4_DIM10.dat, 1:4301|3.0e+01, 2:3681|1.6e+01, 3:4051|1.3e+01, 4:3281|2.2e+01, 5:3641|1.7e+01, 1:4301|3.0e+01, 2:3681|1.6e+01, 3:4051|1.3e+01, 4:3281|2.2e+01, 5:3641|1.7e+01, 1:4301|3.0e+01, 2:3681|1.6e+01, 3:4051|1.3e+01, 4:3281|2.2e+01, 5:3641|1.7e+01
+suite = 'bbob', funcId = 4, DIM = 20, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f4/bbobexp_f4_DIM20.dat, 1:6853|7.7e+01, 2:8161|5.6e+01, 3:7681|3.9e+01, 4:7453|9.8e+01, 5:6529|3.7e+01, 1:6853|7.7e+01, 2:8161|5.6e+01, 3:7681|3.9e+01, 4:7453|9.8e+01, 5:6529|3.7e+01, 1:6853|7.7e+01, 2:8161|5.6e+01, 3:7681|3.9e+01, 4:7453|9.8e+01, 5:6529|3.7e+01

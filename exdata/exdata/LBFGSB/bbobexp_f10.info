@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 10, DIM = 2, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f10/bbobexp_f10_DIM2.dat, 1:144|2.1e-11, 2:192|1.4e-07, 3:108|3.7e-07, 4:147|6.4e-08, 5:114|6.0e-09, 1:144|2.1e-11, 2:192|1.4e-07, 3:108|3.7e-07, 4:147|6.4e-08, 5:114|6.0e-09, 1:144|2.1e-11, 2:192|1.4e-07, 3:108|3.7e-07, 4:147|6.4e-08, 5:114|6.0e-09
+suite = 'bbob', funcId = 10, DIM = 3, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f10/bbobexp_f10_DIM3.dat, 1:260|7.1e-06, 2:296|2.9e-06, 3:8|2.9e+07, 4:8|2.7e+07, 5:268|5.8e-07, 1:260|7.1e-06, 2:296|2.9e-06, 3:8|2.9e+07, 4:8|2.7e+07, 5:268|5.8e-07, 1:260|7.1e-06, 2:296|2.9e-06, 3:8|2.9e+07, 4:8|2.7e+07, 5:268|5.8e-07
+suite = 'bbob', funcId = 10, DIM = 5, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f10/bbobexp_f10_DIM5.dat, 1:12|5.2e+07, 2:684|9.4e-07, 3:1044|3.9e-03, 4:12|3.0e+07, 5:552|4.6e-07, 1:12|5.2e+07, 2:684|9.4e-07, 3:1044|3.9e-03, 4:12|3.0e+07, 5:552|4.6e-07, 1:12|5.2e+07, 2:684|9.4e-07, 3:1044|3.9e-03, 4:12|3.0e+07, 5:552|4.6e-07
+suite = 'bbob', funcId = 10, DIM = 10, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f10/bbobexp_f10_DIM10.dat, 1:2684|9.6e+00, 2:3190|4.6e+01, 3:4796|1.2e-04, 4:3333|5.6e+01, 5:2167|1.0e+02, 1:2684|9.6e+00, 2:3190|4.6e+01, 3:4796|1.2e-04, 4:3333|5.6e+01, 5:2167|1.0e+02, 1:2684|9.6e+00, 2:3190|4.6e+01, 3:4796|1.2e-04, 4:3333|5.6e+01, 5:2167|1.0e+02
+suite = 'bbob', funcId = 10, DIM = 20, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f10/bbobexp_f10_DIM20.dat, 1:52206|5.2e+01, 2:29883|5.3e+01, 3:74298|4.3e-03, 4:48195|2.2e+02, 5:31101|1.6e+01, 1:52206|5.2e+01, 2:29883|5.3e+01, 3:74298|4.3e-03, 4:48195|2.2e+02, 5:31101|1.6e+01, 1:52206|5.2e+01, 2:29883|5.3e+01, 3:74298|4.3e-03, 4:48195|2.2e+02, 5:31101|1.6e+01

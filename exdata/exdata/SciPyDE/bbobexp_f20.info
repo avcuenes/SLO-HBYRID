@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 20, DIM = 2, Precision = 1.000e-08, algId = 'SciPyDE', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f20/bbobexp_f20_DIM2.dat, 1:210|1.4e+00, 2:210|1.4e+00, 3:240|6.9e-01, 4:450|7.2e-01, 5:780|5.9e-01, 1:210|1.4e+00, 2:210|1.4e+00, 3:240|6.9e-01, 4:450|7.2e-01, 5:780|5.9e-01, 1:210|1.4e+00, 2:210|1.4e+00, 3:240|6.9e-01, 4:450|7.2e-01, 5:780|5.9e-01
+suite = 'bbob', funcId = 20, DIM = 3, Precision = 1.000e-08, algId = 'SciPyDE', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f20/bbobexp_f20_DIM3.dat, 1:540|1.9e+00, 2:630|8.6e-01, 3:540|1.9e+00, 4:585|8.8e-01, 5:1980|4.0e-01, 1:540|1.9e+00, 2:630|8.6e-01, 3:540|1.9e+00, 4:585|8.8e-01, 5:1980|4.0e-01, 1:540|1.9e+00, 2:630|8.6e-01, 3:540|1.9e+00, 4:585|8.8e-01, 5:1980|4.0e-01
+suite = 'bbob', funcId = 20, DIM = 5, Precision = 1.000e-08, algId = 'SciPyDE', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f20/bbobexp_f20_DIM5.dat, 1:1875|1.9e+00, 2:1575|1.3e+00, 3:1950|1.3e+00, 4:1800|1.1e+00, 5:6525|2.5e-01, 1:1875|1.9e+00, 2:1575|1.3e+00, 3:1950|1.3e+00, 4:1800|1.1e+00, 5:6525|2.5e-01, 1:1875|1.9e+00, 2:1575|1.3e+00, 3:1950|1.3e+00, 4:1800|1.1e+00, 5:6525|2.5e-01
+suite = 'bbob', funcId = 20, DIM = 10, Precision = 1.000e-08, algId = 'SciPyDE', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f20/bbobexp_f20_DIM10.dat, 1:5100|2.3e+00, 2:5850|2.2e+00, 3:6450|2.2e+00, 4:6750|2.4e+00, 5:20400|2.7e-01, 1:5100|2.3e+00, 2:5850|2.2e+00, 3:6450|2.2e+00, 4:6750|2.4e+00, 5:20400|2.7e-01, 1:5100|2.3e+00, 2:5850|2.2e+00, 3:6450|2.2e+00, 4:6750|2.4e+00, 5:20400|2.7e-01
+suite = 'bbob', funcId = 20, DIM = 20, Precision = 1.000e-08, algId = 'SciPyDE', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f20/bbobexp_f20_DIM20.dat, 1:22200|2.9e+00, 2:18600|2.8e+00, 3:26700|3.0e+00, 4:31500|2.9e+00, 5:80100|1.9e+00, 1:22200|2.9e+00, 2:18600|2.8e+00, 3:26700|3.0e+00, 4:31500|2.9e+00, 5:80100|1.9e+00, 1:22200|2.9e+00, 2:18600|2.8e+00, 3:26700|3.0e+00, 4:31500|2.9e+00, 5:80100|1.9e+00

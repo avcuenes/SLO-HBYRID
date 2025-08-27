@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 18, DIM = 2, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f18/bbobexp_f18_DIM2.dat, 1:24|4.4e+01, 2:33|2.5e+02, 3:24|2.8e+02, 4:30|7.8e+01, 5:21|3.7e+02, 1:24|4.4e+01, 2:33|2.5e+02, 3:24|2.8e+02, 4:30|7.8e+01, 5:21|3.7e+02, 1:24|4.4e+01, 2:33|2.5e+02, 3:24|2.8e+02, 4:30|7.8e+01, 5:21|3.7e+02
+suite = 'bbob', funcId = 18, DIM = 3, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f18/bbobexp_f18_DIM3.dat, 1:48|6.8e+01, 2:8|5.5e+01, 3:64|3.5e+02, 4:80|3.1e+01, 5:56|5.1e+01, 1:48|6.8e+01, 2:8|5.5e+01, 3:64|3.5e+02, 4:80|3.1e+01, 5:56|5.1e+01, 1:48|6.8e+01, 2:8|5.5e+01, 3:64|3.5e+02, 4:80|3.1e+01, 5:56|5.1e+01
+suite = 'bbob', funcId = 18, DIM = 5, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f18/bbobexp_f18_DIM5.dat, 1:198|3.4e+01, 2:1548|1.3e+01, 3:198|4.2e+01, 4:198|1.8e+01, 5:198|2.1e+01, 1:198|3.4e+01, 2:1548|1.3e+01, 3:198|4.2e+01, 4:198|1.8e+01, 5:198|2.1e+01, 1:198|3.4e+01, 2:1548|1.3e+01, 3:198|4.2e+01, 4:198|1.8e+01, 5:198|2.1e+01
+suite = 'bbob', funcId = 18, DIM = 10, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f18/bbobexp_f18_DIM10.dat, 1:1034|1.5e+02, 2:517|3.2e+01, 3:22|8.2e+01, 4:22|1.4e+02, 5:748|7.7e+01, 1:1034|1.5e+02, 2:517|3.2e+01, 3:22|8.2e+01, 4:22|1.4e+02, 5:748|7.7e+01, 1:1034|1.5e+02, 2:517|3.2e+01, 3:22|8.2e+01, 4:22|1.4e+02, 5:748|7.7e+01
+suite = 'bbob', funcId = 18, DIM = 20, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f18/bbobexp_f18_DIM20.dat, 1:42|3.0e+02, 2:8715|6.3e+01, 3:42|4.2e+02, 4:7623|4.7e+01, 5:294|8.0e+01, 1:42|3.0e+02, 2:8715|6.3e+01, 3:42|4.2e+02, 4:7623|4.7e+01, 5:294|8.0e+01, 1:42|3.0e+02, 2:8715|6.3e+01, 3:42|4.2e+02, 4:7623|4.7e+01, 5:294|8.0e+01

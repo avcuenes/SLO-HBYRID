@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 5, DIM = 2, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f5/bbobexp_f5_DIM2.dat, 1:337|1.1e-06, 2:301|1.1e-06, 3:331|1.1e-06, 4:331|1.1e-06, 5:337|1.1e-06, 1:337|1.1e-06, 2:301|1.1e-06, 3:331|1.1e-06, 4:331|1.1e-06, 5:337|1.1e-06, 1:337|1.1e-06, 2:301|1.1e-06, 3:331|1.1e-06, 4:331|1.1e-06, 5:337|1.1e-06
+suite = 'bbob', funcId = 5, DIM = 3, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f5/bbobexp_f5_DIM3.dat, 1:540|1.4e-06, 2:540|1.4e-06, 3:540|1.4e-06, 4:428|1.4e-06, 5:540|1.4e-06, 1:540|1.4e-06, 2:540|1.4e-06, 3:540|1.4e-06, 4:428|1.4e-06, 5:540|1.4e-06, 1:540|1.4e-06, 2:540|1.4e-06, 3:540|1.4e-06, 4:428|1.4e-06, 5:540|1.4e-06
+suite = 'bbob', funcId = 5, DIM = 5, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f5/bbobexp_f5_DIM5.dat, 1:889|2.2e-06, 2:777|2.2e-06, 3:873|2.2e-06, 4:833|2.2e-06, 5:873|2.2e-06, 1:889|2.2e-06, 2:777|2.2e-06, 3:873|2.2e-06, 4:833|2.2e-06, 5:873|2.2e-06, 1:889|2.2e-06, 2:777|2.2e-06, 3:873|2.2e-06, 4:833|2.2e-06, 5:873|2.2e-06
+suite = 'bbob', funcId = 5, DIM = 10, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f5/bbobexp_f5_DIM10.dat, 1:1551|4.1e-06, 2:1901|4.1e-06, 3:1721|4.1e-06, 4:1711|4.1e-06, 5:1881|4.1e-06, 1:1551|4.1e-06, 2:1901|4.1e-06, 3:1721|4.1e-06, 4:1711|4.1e-06, 5:1881|4.1e-06, 1:1551|4.1e-06, 2:1901|4.1e-06, 3:1721|4.1e-06, 4:1711|4.1e-06, 5:1881|4.1e-06
+suite = 'bbob', funcId = 5, DIM = 20, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f5/bbobexp_f5_DIM20.dat, 1:3469|8.0e-06, 2:3301|8.0e-06, 3:3745|8.0e-06, 4:3577|8.0e-06, 5:4273|8.0e-06, 1:3469|8.0e-06, 2:3301|8.0e-06, 3:3745|8.0e-06, 4:3577|8.0e-06, 5:4273|8.0e-06, 1:3469|8.0e-06, 2:3301|8.0e-06, 3:3745|8.0e-06, 4:3577|8.0e-06, 5:4273|8.0e-06

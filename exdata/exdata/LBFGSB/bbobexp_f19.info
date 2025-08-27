@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 19, DIM = 2, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f19/bbobexp_f19_DIM2.dat, 1:45|3.0e-01, 2:63|9.9e+00, 3:69|6.0e-01, 4:30|9.9e-01, 5:66|1.3e+01, 1:45|3.0e-01, 2:63|9.9e+00, 3:69|6.0e-01, 4:30|9.9e-01, 5:66|1.3e+01, 1:45|3.0e-01, 2:63|9.9e+00, 3:69|6.0e-01, 4:30|9.9e-01, 5:66|1.3e+01
+suite = 'bbob', funcId = 19, DIM = 3, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f19/bbobexp_f19_DIM3.dat, 1:72|4.9e+00, 2:244|4.6e+00, 3:208|2.0e+01, 4:132|7.0e+01, 5:96|2.8e+01, 1:72|4.9e+00, 2:244|4.6e+00, 3:208|2.0e+01, 4:132|7.0e+01, 5:96|2.8e+01, 1:72|4.9e+00, 2:244|4.6e+00, 3:208|2.0e+01, 4:132|7.0e+01, 5:96|2.8e+01
+suite = 'bbob', funcId = 19, DIM = 5, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f19/bbobexp_f19_DIM5.dat, 1:318|3.8e+01, 2:294|1.5e+01, 3:150|2.9e+01, 4:324|2.2e+01, 5:192|9.5e+00, 1:318|3.8e+01, 2:294|1.5e+01, 3:150|2.9e+01, 4:324|2.2e+01, 5:192|9.5e+00, 1:318|3.8e+01, 2:294|1.5e+01, 3:150|2.9e+01, 4:324|2.2e+01, 5:192|9.5e+00
+suite = 'bbob', funcId = 19, DIM = 10, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f19/bbobexp_f19_DIM10.dat, 1:1397|4.4e+01, 2:1320|5.0e+01, 3:1837|1.5e+01, 4:2079|3.7e+01, 5:1837|9.4e+00, 1:1397|4.4e+01, 2:1320|5.0e+01, 3:1837|1.5e+01, 4:2079|3.7e+01, 5:1837|9.4e+00, 1:1397|4.4e+01, 2:1320|5.0e+01, 3:1837|1.5e+01, 4:2079|3.7e+01, 5:1837|9.4e+00
+suite = 'bbob', funcId = 19, DIM = 20, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f19/bbobexp_f19_DIM20.dat, 1:5502|5.0e+01, 2:24780|4.0e+01, 3:13083|4.8e+01, 4:7833|3.1e+01, 5:17031|2.8e+01, 1:5502|5.0e+01, 2:24780|4.0e+01, 3:13083|4.8e+01, 4:7833|3.1e+01, 5:17031|2.8e+01, 1:5502|5.0e+01, 2:24780|4.0e+01, 3:13083|4.8e+01, 4:7833|3.1e+01, 5:17031|2.8e+01

@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 8, DIM = 2, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM2.dat, 1:6|8.5e+03, 2:6|1.2e+03, 3:6|9.5e+02, 4:6|4.5e+03, 5:78|2.1e-11, 1:6|8.5e+03, 2:6|1.2e+03, 3:6|9.5e+02, 4:6|4.5e+03, 5:78|2.1e-11, 1:6|8.5e+03, 2:6|1.2e+03, 3:6|9.5e+02, 4:6|4.5e+03, 5:78|2.1e-11
+suite = 'bbob', funcId = 8, DIM = 3, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM3.dat, 1:132|1.9e-09, 2:8|8.4e+04, 3:164|2.8e-11, 4:164|3.5e-11, 5:124|9.5e-11, 1:132|1.9e-09, 2:8|8.4e+04, 3:164|2.8e-11, 4:164|3.5e-11, 5:124|9.5e-11, 1:132|1.9e-09, 2:8|8.4e+04, 3:164|2.8e-11, 4:164|3.5e-11, 5:124|9.5e-11
+suite = 'bbob', funcId = 8, DIM = 5, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM5.dat, 1:246|4.9e-08, 2:12|1.9e+05, 3:162|1.3e-08, 4:180|1.7e-11, 5:12|3.7e+04, 1:246|4.9e-08, 2:12|1.9e+05, 3:162|1.3e-08, 4:180|1.7e-11, 5:12|3.7e+04, 1:246|4.9e-08, 2:12|1.9e+05, 3:162|1.3e-08, 4:180|1.7e-11, 5:12|3.7e+04
+suite = 'bbob', funcId = 8, DIM = 10, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM10.dat, 1:1012|9.8e-09, 2:506|1.5e-06, 3:913|7.7e-09, 4:616|2.1e-08, 5:968|2.5e-08, 1:1012|9.8e-09, 2:506|1.5e-06, 3:913|7.7e-09, 4:616|2.1e-08, 5:968|2.5e-08, 1:1012|9.8e-09, 2:506|1.5e-06, 3:913|7.7e-09, 4:616|2.1e-08, 5:968|2.5e-08
+suite = 'bbob', funcId = 8, DIM = 20, Precision = 1.000e-08, algId = 'LBFGSB', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f8/bbobexp_f8_DIM20.dat, 1:2478|4.0e+00, 2:2331|1.9e+02, 3:3507|1.1e-08, 4:3171|7.8e-09, 5:2835|1.1e-08, 1:2478|4.0e+00, 2:2331|1.9e+02, 3:3507|1.1e-08, 4:3171|7.8e-09, 5:2835|1.1e-08, 1:2478|4.0e+00, 2:2331|1.9e+02, 3:3507|1.1e-08, 4:3171|7.8e-09, 5:2835|1.1e-08

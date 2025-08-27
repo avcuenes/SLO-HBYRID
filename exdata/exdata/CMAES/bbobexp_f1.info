@@ -1,0 +1,15 @@
+suite = 'bbob', funcId = 1, DIM = 2, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f1/bbobexp_f1_DIM2.dat, 1:475|0.0e+00, 2:535|0.0e+00, 3:475|0.0e+00, 4:451|0.0e+00, 5:463|0.0e+00, 1:475|0.0e+00, 2:535|0.0e+00, 3:475|0.0e+00, 4:451|0.0e+00, 5:463|0.0e+00, 1:475|0.0e+00, 2:535|0.0e+00, 3:475|0.0e+00, 4:451|0.0e+00, 5:463|0.0e+00
+suite = 'bbob', funcId = 1, DIM = 3, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f1/bbobexp_f1_DIM3.dat, 1:715|0.0e+00, 2:785|0.0e+00, 3:743|0.0e+00, 4:799|0.0e+00, 5:771|3.6e-15, 1:715|0.0e+00, 2:785|0.0e+00, 3:743|0.0e+00, 4:799|0.0e+00, 5:771|3.6e-15, 1:715|0.0e+00, 2:785|0.0e+00, 3:743|0.0e+00, 4:799|0.0e+00, 5:771|3.6e-15
+suite = 'bbob', funcId = 1, DIM = 5, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f1/bbobexp_f1_DIM5.dat, 1:1233|1.4e-14, 2:1185|5.7e-14, 3:1209|0.0e+00, 4:1281|0.0e+00, 5:1241|7.1e-15, 1:1233|1.4e-14, 2:1185|5.7e-14, 3:1209|0.0e+00, 4:1281|0.0e+00, 5:1241|7.1e-15, 1:1233|1.4e-14, 2:1185|5.7e-14, 3:1209|0.0e+00, 4:1281|0.0e+00, 5:1241|7.1e-15
+suite = 'bbob', funcId = 1, DIM = 10, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f1/bbobexp_f1_DIM10.dat, 1:2491|1.4e-14, 2:2581|5.7e-14, 3:2491|0.0e+00, 4:2471|0.0e+00, 5:2481|7.1e-15, 1:2491|1.4e-14, 2:2581|5.7e-14, 3:2491|0.0e+00, 4:2471|0.0e+00, 5:2481|7.1e-15, 1:2491|1.4e-14, 2:2581|5.7e-14, 3:2491|0.0e+00, 4:2471|0.0e+00, 5:2481|7.1e-15
+suite = 'bbob', funcId = 1, DIM = 20, Precision = 1.000e-08, algId = 'CMAES', coco_version = '2.8.1', logger = 'bbob', data_format = 'bbob-new2', settings = ''
+% 
+data_f1/bbobexp_f1_DIM20.dat, 1:4585|1.4e-14, 2:4753|5.7e-14, 3:4525|2.8e-14, 4:4429|2.8e-14, 5:4429|1.8e-14, 1:4585|1.4e-14, 2:4753|5.7e-14, 3:4525|2.8e-14, 4:4429|2.8e-14, 5:4429|1.8e-14, 1:4585|1.4e-14, 2:4753|5.7e-14, 3:4525|2.8e-14, 4:4429|2.8e-14, 5:4429|1.8e-14
