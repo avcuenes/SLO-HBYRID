@@ -1,0 +1,18 @@
+Functions used: 12
+Algorithms used: 12
+Dropped algorithms (insufficient coverage): []
+Coverage by algorithm:
+             n_funcs
+alg                 
+CMAES             12
+GA                12
+GWO               12
+JADE              12
+LBFGSB            12
+LSHADE            12
+NLSHADE-RSP       12
+PSO               12
+SLO_HBYRID        12
+SSA               12
+SciPyDE           12
+jSO               12
